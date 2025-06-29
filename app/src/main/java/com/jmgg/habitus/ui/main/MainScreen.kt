@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.ui.main.components.HabitCard
+import com.jmgg.habitus.ui.main.components.PremiumBottomNavBar
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -42,7 +43,17 @@ fun MainScreen(navController: NavController) {
             }) {
                 Text("+")
             }
+        },
+        bottomBar = {
+            if (currentUser?.isPremium == true) {
+                PremiumBottomNavBar(
+                    currentRoute = navController.currentBackStackEntry?.destination?.route,
+                    onNavigateToStats = { navController.navigate("premium_stats") },
+                    onNavigateToRoutines = { navController.navigate("premium_routines") }
+                )
+            }
         }
+
     ) { padding ->
         Box(modifier = Modifier
             .fillMaxSize()
@@ -53,6 +64,27 @@ fun MainScreen(navController: NavController) {
                     Text("Aún no tienes hábitos registrados")
                 }
             } else {
+                LazyColumn {
+                    items(habits) { habit ->
+                        HabitCard(
+                            habit = habit,
+                            isPremium = currentUser?.isPremium == true,
+                            onClick = {
+                                navController.navigate("createHabit/${habit.id}")
+                            },
+                            onEdit = {
+                                navController.navigate("editHabit/${habit.id}")
+                            },
+                            onDelete = {
+                                if (habit.id != null && habit.userId != null) {
+                                    habitViewModel.deleteHabit(habit.id, habit.userId)
+                                }
+                            }
+                        )
+                    }
+                }
+
+                /*
                 LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
                     items(habits) { habit ->
                         HabitCard(
@@ -72,7 +104,7 @@ fun MainScreen(navController: NavController) {
                         Spacer(modifier = Modifier.height(8.dp))
                     }
 
-                }
+                }*/
             }
         }
     }

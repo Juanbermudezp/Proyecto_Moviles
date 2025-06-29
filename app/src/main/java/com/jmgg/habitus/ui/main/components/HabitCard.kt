@@ -19,6 +19,7 @@ import com.jmgg.habitus.models.Habit
 @Composable
 fun HabitCard(
     habit: Habit,
+    isPremium: Boolean,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
@@ -28,6 +29,10 @@ fun HabitCard(
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(8.dp)
+            .then(
+                if (isPremium && habit.id != null) Modifier.clickable { onClick() }
+                else Modifier // solo premium puede hacer click para editar
+            )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(habit.name, style = MaterialTheme.typography.headlineSmall)

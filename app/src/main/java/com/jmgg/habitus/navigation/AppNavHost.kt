@@ -2,8 +2,10 @@ package com.jmgg.habitus.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.jmgg.habitus.ui.auth.LoginScreen
 import com.jmgg.habitus.ui.auth.RegisterScreen
 import com.jmgg.habitus.ui.habit.CreateHabitScreen
@@ -67,6 +69,14 @@ fun AppNavHost(navController: NavHostController, startDestination: String = "log
         composable("routines") {
             RecommendedRoutinesScreen()
         }
+
+        composable("createHabit/{habitId}", arguments = listOf(
+            navArgument("habitId") { type = NavType.IntType; defaultValue = -1 }
+        )) { backStackEntry ->
+            val habitId = backStackEntry.arguments?.getInt("habitId")?.takeIf { it != -1 }
+            CreateHabitScreen(onHabitCreated = { navController.popBackStack() }, habitId = habitId)
+        }
+
 
         composable("main") {
             MainScreen(navController)

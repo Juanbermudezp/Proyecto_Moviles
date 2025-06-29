@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CreateHabitScreen(
-    onHabitCreated: () -> Unit
+    onHabitCreated: () -> Unit,
+    habitId: Int? = null //para la navegacion premium
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val user = HabitusApp.authViewModel.currentUser.collectAsState().value
@@ -30,6 +31,27 @@ fun CreateHabitScreen(
     var reminderTime by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+
+    // ✅ Cargar hábito si es edición
+    LaunchedEffect(habitId) {
+        if (habitId != null) {
+            habitViewModel.loadHabitById(habitId)
+        }
+    }
+
+    val selectedHabit = habitViewModel.selectedHabit.collectAsState().value
+
+    // ✅ Precargar campos si existe
+    LaunchedEffect(selectedHabit) {
+        selectedHabit?.let {
+            name = it.name
+            category = it.category
+            frequency = it.frequency
+            reminderTime = it.reminderTime ?: ""
+            description = it.description
+            notes = it.notes
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -103,6 +125,7 @@ fun CreateHabitScreen(
                 onClick = {
                     if (user != null && name.isNotBlank()) {
                         val habit = Habit(
+                            id = habitId, // ✅ Si es edición, usar el ID existente
                             userId = user.id,
                             name = name,
                             category = category,
@@ -113,7 +136,12 @@ fun CreateHabitScreen(
                         )
                         coroutineScope.launch {
                             try {
-                                habitViewModel.addHabit(habit)
+                                if (habitId != null) {
+                                    habitViewModel.updateHabit(habit)
+                                } else {
+                                    habitViewModel.addHabit(habit)
+                                }
+                               // habitViewModel.addHabit(habit)
                                 snackbarHostState.showSnackbar("Hábito guardado")
                                 onHabitCreated()
                             } catch (e: Exception) {
