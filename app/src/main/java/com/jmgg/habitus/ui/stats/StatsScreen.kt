@@ -1,14 +1,15 @@
 package com.jmgg.habitus.ui.stats
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jmgg.habitus.HabitusApp
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
 fun StatsScreen() {
@@ -17,7 +18,7 @@ fun StatsScreen() {
     val currentUser = authViewModel.currentUser.collectAsState().value
 
     val habits by habitViewModel.habits.collectAsState()
-    val scope = rememberCoroutineScope()
+    val completedMap by habitViewModel.completedHabits.collectAsState()
 
     LaunchedEffect(currentUser) {
         currentUser?.let {
@@ -33,6 +34,12 @@ fun StatsScreen() {
     }
 
     val totalHabits = habits.size
+    val completed = habits.count { habit ->
+        val id = habit.id
+        id != null && completedMap[id] == true
+    }
+
+    val pending = totalHabits - completed
     val withReminder = habits.count { !it.reminderTime.isNullOrBlank() }
     val byCategory = habits.groupingBy { it.category }.eachCount()
     val topCategories = byCategory.entries.sortedByDescending { it.value }.take(3)
@@ -45,9 +52,15 @@ fun StatsScreen() {
     ) {
         Text("Tus estadísticas", style = MaterialTheme.typography.headlineSmall)
 
+        // NUEVA GRÁFICA DE PROGRESO
+        CompletionChart(completed, pending)
+
         CardStat("Total de hábitos", "$totalHabits")
         CardStat("Con recordatorio", "$withReminder")
-        CardStat("Categorías principales", topCategories.joinToString { "${it.key} (${it.value})" })
+        CardStat(
+            "Categorías principales",
+            topCategories.joinToString { "${it.key} (${it.value})" }
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -71,3 +84,41 @@ fun CardStat(title: String, value: String) {
         }
     }
 }
+
+@Composable
+fun CompletionChart(completed: Int, pending: Int) {
+    val total = completed + pending
+
+    if (total == 0) {
+        Text("No hay datos para mostrar el progreso aún.")
+        return
+    }
+
+    Column {
+        Text("Progreso de hábitos", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+
+        Row(Modifier.fillMaxWidth()) {
+            if (completed > 0) {
+                Box(
+                    Modifier
+                        .weight(completed.toFloat() / total)
+                        .height(24.dp)
+                        .background(Color(0xFF4CAF50)) // Verde
+                )
+            }
+            if (pending > 0) {
+                Box(
+                    Modifier
+                        .weight(pending.toFloat() / total)
+                        .height(24.dp)
+                        .background(Color(0xFFF44336)) // Rojo
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+        Text("✅ Completados: $completed   ❌ Pendientes: $pending", fontSize = 14.sp)
+    }
+}
+

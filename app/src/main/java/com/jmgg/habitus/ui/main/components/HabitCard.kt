@@ -7,11 +7,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jmgg.habitus.models.Habit
@@ -20,6 +22,8 @@ import com.jmgg.habitus.models.Habit
 fun HabitCard(
     habit: Habit,
     isPremium: Boolean,
+    isCompleted: Boolean,
+    onToggleCompleted: () -> Unit,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
@@ -31,13 +35,22 @@ fun HabitCard(
             .padding(8.dp)
             .then(
                 if (isPremium && habit.id != null) Modifier.clickable { onClick() }
-                else Modifier // solo premium puede hacer click para editar
+                else Modifier
             )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(habit.name, style = MaterialTheme.typography.headlineSmall)
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = isCompleted,
+                    onCheckedChange = { onToggleCompleted() }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(habit.name, style = MaterialTheme.typography.headlineSmall)
+            }
+
             Text(habit.category, style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(8.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End

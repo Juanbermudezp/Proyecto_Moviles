@@ -18,6 +18,8 @@ fun MainScreen(navController: NavController) {
     val habitViewModel = HabitusApp.habitViewModel
     val currentUser = HabitusApp.authViewModel.currentUser.collectAsState().value
     val habits by habitViewModel.habits.collectAsState()
+    val completedHabits = habitViewModel.completedHabits.collectAsState().value // para los stats
+
 
     LaunchedEffect(currentUser) {
         currentUser?.let {
@@ -36,6 +38,10 @@ fun MainScreen(navController: NavController) {
                     HabitCard(
                         habit = habit,
                         isPremium = currentUser?.isPremium == true,
+                        isCompleted = completedHabits[habit.id ?: -1] == true,
+                        onToggleCompleted = {
+                            habit.id?.let { habitViewModel.toggleHabitCompleted(it) }
+                        },
                         onClick = {
                             navController.navigate("createHabit/${habit.id}")
                         },
