@@ -75,26 +75,14 @@ fun EditHabitScreen(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        /*
-        OutlinedTextField(
-            value = frequency,
-            onValueChange = { frequency = it },
-            label = { Text("Frecuencia (ej: 3 veces/semana)") },
-            modifier = Modifier.fillMaxWidth()
-        )*/
+     
         FrequencyPicker(
             currentFrequency = frequency,
             onFrequencySelected = { frequency = it }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        /*
-        OutlinedTextField(
-            value = reminderTime,
-            onValueChange = { reminderTime = it },
-            label = { Text("Hora de recordatorio (opcional)") },
-            modifier = Modifier.fillMaxWidth()
-        )*/
+
         ReminderTimePicker(
             currentTime = reminderTime,
             onTimeSelected = { reminderTime = it }
