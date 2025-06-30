@@ -12,14 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.ui.main.components.HabitCard
-import com.jmgg.habitus.ui.main.components.PremiumBottomNavBar
 
 @Composable
 fun MainScreen(navController: NavController) {
     val habitViewModel = HabitusApp.habitViewModel
-    val authViewModel = HabitusApp.authViewModel
-    val currentUser = authViewModel.currentUser.collectAsState().value
-
+    val currentUser = HabitusApp.authViewModel.currentUser.collectAsState().value
     val habits by habitViewModel.habits.collectAsState()
 
     LaunchedEffect(currentUser) {
@@ -28,63 +25,33 @@ fun MainScreen(navController: NavController) {
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Mis Hábitos") },
-                actions = {
-                    // Aquí podrías agregar botón para cerrar sesión, etc.
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate("createHabit")
-            }) {
-                Text("+")
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (habits.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Aún no tienes hábitos registrados")
             }
-        },
-        bottomBar = {
-            if (currentUser?.isPremium == true) {
-                PremiumBottomNavBar(
-                    currentRoute = navController.currentBackStackEntry?.destination?.route,
-                    onNavigateToStats = { navController.navigate("stats") },
-                    onNavigateToRoutines = { navController.navigate("routines") }
-                )
-            }
-        }
-
-    ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
-
-            if (habits.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Aún no tienes hábitos registrados")
-                }
-            } else {
-                LazyColumn {
-                    items(habits) { habit ->
-                        HabitCard(
-                            habit = habit,
-                            isPremium = currentUser?.isPremium == true,
-                            onClick = {
-                                navController.navigate("createHabit/${habit.id}")
-                            },
-                            onEdit = {
-                                navController.navigate("editHabit/${habit.id}")
-                            },
-                            onDelete = {
-                                if (habit.id != null) {
-                                    habitViewModel.deleteHabit(habit.id, habit.userId)
-                                }
+        } else {
+            LazyColumn(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                items(habits) { habit ->
+                    HabitCard(
+                        habit = habit,
+                        isPremium = currentUser?.isPremium == true,
+                        onClick = {
+                            navController.navigate("createHabit/${habit.id}")
+                        },
+                        onEdit = {
+                            navController.navigate("editHabit/${habit.id}")
+                        },
+                        onDelete = {
+                            if (habit.id != null && habit.userId != null) {
+                                habitViewModel.deleteHabit(habit.id, habit.userId)
                             }
-                        )
-                    }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-
             }
         }
+
     }
 }

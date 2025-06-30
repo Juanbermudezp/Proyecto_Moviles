@@ -1,6 +1,7 @@
 package com.jmgg.habitus.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,7 +18,11 @@ import com.jmgg.habitus.ui.premium.RoutineDetailScreen
 import com.jmgg.habitus.ui.stats.StatsScreen
 
 @Composable
-fun AppNavHost(navController: NavHostController, startDestination: String = "login") {
+fun AppNavHost(
+    navController: NavHostController,
+    startDestination: String = "login",
+    modifier: Modifier
+) {
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable("login") {

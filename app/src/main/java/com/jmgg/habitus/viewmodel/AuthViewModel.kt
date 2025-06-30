@@ -40,4 +40,8 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
             }
         }
     }
+    fun logout() {
+        _currentUser.value = null
+    }
+
 }
