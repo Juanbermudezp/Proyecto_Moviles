@@ -28,7 +28,8 @@ fun AppScaffold() {
                     onLogout = {
                         HabitusApp.authViewModel.logout()
                         navController.navigate("login") {
-                            popUpTo("main") { inclusive = true }
+                            popUpTo(0)
+                            launchSingleTop = true
                         }
                     }
                 )
