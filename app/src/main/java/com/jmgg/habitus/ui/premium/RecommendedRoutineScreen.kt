@@ -2,49 +2,52 @@ package com.jmgg.habitus.ui.premium
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.jmgg.habitus.HabitusApp
+import com.jmgg.habitus.models.Habit
 import com.jmgg.habitus.ui.premium.components.RoutineCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun RecommendedRoutinesScreen() {
+fun RecommendedRoutinesScreen(navController: NavController) {
+    val currentUser = HabitusApp.authViewModel.currentUser.collectAsState().value
+
+    if (currentUser == null || !currentUser.isPremium) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Solo para usuarios premium.")
+        }
+        return
+    }
+
     val routines = listOf(
-        Pair("Dormir Mejor", "Rutina para descansar mejor: leer antes de dormir, evitar pantallas, dormir 8h."),
-        Pair("Salud Mental", "Ejercicios de respiración, journaling diario, caminatas relajantes."),
-        Pair("Vida Activa", "Ejercicio 30 min diarios, estiramientos matutinos, buena hidratación.")
+        "sleep" to "Dormir mejor y más rápido",
+        "mental" to "Salud mental y relajación",
+        "fitness" to "Estilo de vida activo"
     )
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Top
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = "Rutinas Recomendadas",
-            style = MaterialTheme.typography.headlineSmall
-        )
+        Text("Rutinas personalizadas", style = MaterialTheme.typography.headlineSmall)
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        routines.forEach { routine ->
+        routines.forEach { (id, title) ->
             RoutineCard(
-                title = routine.first,
-                description = routine.second,
+                title = title,
+                description = "Toca para más detalles",
                 onSelect = {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("Rutina '${routine.first}' seleccionada (simulado)")
-                    }
+                    navController.navigate("routineDetail/$id")
                 }
             )
-            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }

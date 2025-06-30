@@ -13,6 +13,7 @@ import com.jmgg.habitus.ui.habit.EditHabitScreen
 import com.jmgg.habitus.ui.habit.HabitDetailsScreen
 import com.jmgg.habitus.ui.main.MainScreen
 import com.jmgg.habitus.ui.premium.RecommendedRoutinesScreen
+import com.jmgg.habitus.ui.premium.RoutineDetailScreen
 import com.jmgg.habitus.ui.stats.StatsScreen
 
 @Composable
@@ -60,14 +61,18 @@ fun AppNavHost(navController: NavHostController, startDestination: String = "log
                 }
             )
         }
+        composable("main") {
+            MainScreen(navController)
+        }
 
+        //premium screens
 
         composable("stats") {
             StatsScreen()
         }
 
         composable("routines") {
-            RecommendedRoutinesScreen()
+            RecommendedRoutinesScreen( navController)
         }
 
         composable("createHabit/{habitId}", arguments = listOf(
@@ -76,10 +81,15 @@ fun AppNavHost(navController: NavHostController, startDestination: String = "log
             val habitId = backStackEntry.arguments?.getInt("habitId")?.takeIf { it != -1 }
             CreateHabitScreen(onHabitCreated = { navController.popBackStack() }, habitId = habitId)
         }
-
-
-        composable("main") {
-            MainScreen(navController)
+        composable(
+            route = "routineDetail/{routineId}",
+            arguments = listOf(navArgument("routineId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val routineId = backStackEntry.arguments?.getString("routineId") ?: ""
+            RoutineDetailScreen(
+                routineId = routineId,
+                onRoutineAdded = { navController.popBackStack() }
+            )
         }
     }
 }

@@ -48,8 +48,8 @@ fun MainScreen(navController: NavController) {
             if (currentUser?.isPremium == true) {
                 PremiumBottomNavBar(
                     currentRoute = navController.currentBackStackEntry?.destination?.route,
-                    onNavigateToStats = { navController.navigate("premium_stats") },
-                    onNavigateToRoutines = { navController.navigate("premium_routines") }
+                    onNavigateToStats = { navController.navigate("stats") },
+                    onNavigateToRoutines = { navController.navigate("routines") }
                 )
             }
         }
@@ -76,7 +76,7 @@ fun MainScreen(navController: NavController) {
                                 navController.navigate("editHabit/${habit.id}")
                             },
                             onDelete = {
-                                if (habit.id != null && habit.userId != null) {
+                                if (habit.id != null) {
                                     habitViewModel.deleteHabit(habit.id, habit.userId)
                                 }
                             }
@@ -84,27 +84,6 @@ fun MainScreen(navController: NavController) {
                     }
                 }
 
-                /*
-                LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                    items(habits) { habit ->
-                        HabitCard(
-                            habit = habit,
-                            onClick = {
-                                navController.navigate("habitDetails/${habit.id}")
-                            },
-                            onEdit = {
-                                navController.navigate("editHabit/${habit.id}")
-                            },
-                            onDelete = {
-                                if (habit.id != null && habit.userId != null) {
-                                    habitViewModel.deleteHabit(habit.id, habit.userId)
-                                }
-                            }
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-
-                }*/
             }
         }
     }
