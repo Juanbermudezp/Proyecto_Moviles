@@ -15,7 +15,6 @@ fun MainBottomNavBar(
     onNavigateToHome: () -> Unit,
     onNavigateToStats: () -> Unit,
     onNavigateToRoutines: () -> Unit,
-    onLogout: () -> Unit
 ) {
 
     NavigationBar {
@@ -55,16 +54,5 @@ fun MainBottomNavBar(
                 label = { Text("Rutinas") }
             )
         }
-        NavigationBarItem(
-            selected = false,
-            onClick = onLogout,
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Cerrar sesión"
-                )
-            },
-            label = { Text("Salir") }
-        )
     }
 }

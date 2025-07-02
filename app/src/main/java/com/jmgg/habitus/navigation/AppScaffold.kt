@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.ui.main.components.MainBottomNavBar
+import com.jmgg.habitus.ui.main.components.MainTopBar
 
 @Composable
 fun AppScaffold() {
@@ -17,9 +18,9 @@ fun AppScaffold() {
     val hideBars = currentRoute in listOf("login", "register")
 
     Scaffold(
-        bottomBar = {
+        topBar = {
             if (!hideBars) {
-                MainBottomNavBar(
+                MainTopBar(
                     isPremium = currentUser?.isPremium == true,
                     currentRoute = currentRoute,
                     onNavigateToHome = { navController.navigate("main") },
@@ -32,6 +33,18 @@ fun AppScaffold() {
                             launchSingleTop = true
                         }
                     }
+                )
+            }
+
+        },
+        bottomBar = {
+            if (!hideBars) {
+                MainBottomNavBar(
+                    isPremium = currentUser?.isPremium == true,
+                    currentRoute = currentRoute,
+                    onNavigateToHome = { navController.navigate("main") },
+                    onNavigateToStats = { navController.navigate("stats") },
+                    onNavigateToRoutines = { navController.navigate("routines") },
                 )
             }
         },
