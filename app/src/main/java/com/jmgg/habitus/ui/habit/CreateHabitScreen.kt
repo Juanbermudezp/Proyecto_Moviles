@@ -2,7 +2,9 @@ package com.jmgg.habitus.ui.habit
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +23,8 @@ fun CreateHabitScreen(
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val user = HabitusApp.authViewModel.currentUser.collectAsState().value
+    val scrollState = rememberScrollState()
+
 
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -60,7 +64,8 @@ fun CreateHabitScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
-                .padding(padding),
+                .padding(padding)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top
         ) {
             Text("Nuevo Hábito", style = MaterialTheme.typography.headlineSmall)

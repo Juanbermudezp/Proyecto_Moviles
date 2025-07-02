@@ -1,5 +1,6 @@
 package com.jmgg.habitus.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -8,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.ui.main.components.MainBottomNavBar
 import com.jmgg.habitus.ui.main.components.MainTopBar
+import androidx.compose.foundation.layout.Box
+
 
 @Composable
 fun AppScaffold() {
@@ -58,9 +61,14 @@ fun AppScaffold() {
             }
         }
     ) { padding ->
-        AppNavHost(
-            navController = navController,
-            modifier = Modifier.padding(padding)
-        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
+            AppNavHost(
+                navController = navController,
+                modifier = Modifier.padding(padding)
+            )
+        }
     }
 }
+

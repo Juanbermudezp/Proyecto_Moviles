@@ -1,6 +1,8 @@
 package com.jmgg.habitus.ui.premium
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -19,6 +21,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecommendedRoutinesScreen(navController: NavController) {
     val currentUser = HabitusApp.authViewModel.currentUser.collectAsState().value
+    val scrollState = rememberScrollState()
+
 
     if (currentUser == null || !currentUser.isPremium) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -35,7 +39,8 @@ fun RecommendedRoutinesScreen(navController: NavController) {
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(24.dp),
+        .padding(24.dp)
+        .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Rutinas personalizadas", style = MaterialTheme.typography.headlineSmall)

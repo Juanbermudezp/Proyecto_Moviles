@@ -2,6 +2,8 @@ package com.jmgg.habitus.ui.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +18,8 @@ fun StatsScreen() {
     val habitViewModel = HabitusApp.habitViewModel
     val authViewModel = HabitusApp.authViewModel
     val currentUser = authViewModel.currentUser.collectAsState().value
+    val scrollState = rememberScrollState()
+
 
     val habits by habitViewModel.habits.collectAsState()
     val completedMap by habitViewModel.completedHabits.collectAsState()
@@ -47,12 +51,12 @@ fun StatsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(24.dp)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Tus estadísticas", style = MaterialTheme.typography.headlineSmall)
 
-        // NUEVA GRÁFICA DE PROGRESO
         CompletionChart(completed, pending)
 
         CardStat("Total de hábitos", "$totalHabits")

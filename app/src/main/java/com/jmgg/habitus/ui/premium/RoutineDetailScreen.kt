@@ -1,6 +1,8 @@
 package com.jmgg.habitus.ui.premium
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,6 +22,8 @@ fun RoutineDetailScreen(
     val habitViewModel = HabitusApp.habitViewModel
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
+
 
     val routineData = remember(currentUser) {
         getPredefinedRoutine(routineId, currentUser?.id ?: -1)
@@ -39,7 +43,8 @@ fun RoutineDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
-                .padding(padding),
+                .padding(padding)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(

@@ -1,6 +1,8 @@
 package com.jmgg.habitus.ui.habit
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +25,8 @@ fun HabitDetailsScreen(
     var reminderTime by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
+
 
     // Cargar hábito desde ViewModel
     LaunchedEffect(habitId) {
@@ -46,6 +50,8 @@ fun HabitDetailsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Top
         ) {
             Text("Detalle del Hábito", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(16.dp))
