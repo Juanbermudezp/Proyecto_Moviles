@@ -11,6 +11,8 @@ import com.jmgg.habitus.network.SupabaseClient
 import androidx.room.Room
 import com.jmgg.habitus.data.datasources.local.AppDatabase
 import com.jmgg.habitus.data.datasources.local.LocalUserDataSource
+import androidx.lifecycle.ViewModelProvider // Or your DI framework's way to get ViewModels
+
 
 class HabitusApp : Application() {
 

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
 import com.jmgg.habitus.navigation.AppNavHost
+import com.jmgg.habitus.navigation.AppScaffold
 import com.jmgg.habitus.ui.theme.HabitusTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,8 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             HabitusTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    val navController = rememberNavController()
-                    AppNavHost(navController)
+                    AppScaffold()
                 }
 
             }

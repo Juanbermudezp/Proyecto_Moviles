@@ -32,10 +32,16 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             val success = repository.registerUser(user)
             if (success) {
+                val newUser = repository.loginUser(user.email, user.password) //
+                _currentUser.value = newUser
                 _authError.value = null
             } else {
                 _authError.value = "Error al registrar usuario"
             }
         }
     }
+    fun logout() {
+        _currentUser.value = null
+    }
+
 }

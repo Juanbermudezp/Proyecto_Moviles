@@ -2,7 +2,9 @@ package com.jmgg.habitus.ui.habit
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,10 +18,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CreateHabitScreen(
-    onHabitCreated: () -> Unit
+    onHabitCreated: () -> Unit,
+    habitId: Int? = null //para la navegacion premium
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val user = HabitusApp.authViewModel.currentUser.collectAsState().value
+    val scrollState = rememberScrollState()
+
 
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -31,6 +36,27 @@ fun CreateHabitScreen(
     var description by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
 
+    // ✅ Cargar hábito si es edición
+    LaunchedEffect(habitId) {
+        if (habitId != null) {
+            habitViewModel.loadHabitById(habitId)
+        }
+    }
+
+    val selectedHabit = habitViewModel.selectedHabit.collectAsState().value
+
+    // ✅ Precargar campos si existe
+    LaunchedEffect(selectedHabit) {
+        selectedHabit?.let {
+            name = it.name
+            category = it.category
+            frequency = it.frequency
+            reminderTime = it.reminderTime ?: ""
+            description = it.description
+            notes = it.notes
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
@@ -38,7 +64,8 @@ fun CreateHabitScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
-                .padding(padding),
+                .padding(padding)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top
         ) {
             Text("Nuevo Hábito", style = MaterialTheme.typography.headlineSmall)
@@ -63,20 +90,16 @@ fun CreateHabitScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedTextField(
-                value = frequency,
-                onValueChange = { frequency = it },
-                label = { Text("Frecuencia (ej: 3 veces/semana)") },
-                modifier = Modifier.fillMaxWidth()
+            FrequencyPicker(
+                currentFrequency = frequency,
+                onFrequencySelected = { frequency = it }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedTextField(
-                value = reminderTime,
-                onValueChange = { reminderTime = it },
-                label = { Text("Hora de recordatorio (opcional)") },
-                modifier = Modifier.fillMaxWidth()
+            ReminderTimePicker(
+                currentTime = reminderTime,
+                onTimeSelected = { reminderTime = it }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -103,6 +126,7 @@ fun CreateHabitScreen(
                 onClick = {
                     if (user != null && name.isNotBlank()) {
                         val habit = Habit(
+                            id = habitId, // ✅ Si es edición, usar el ID existente
                             userId = user.id,
                             name = name,
                             category = category,
@@ -113,7 +137,12 @@ fun CreateHabitScreen(
                         )
                         coroutineScope.launch {
                             try {
-                                habitViewModel.addHabit(habit)
+                                if (habitId != null) {
+                                    habitViewModel.updateHabit(habit)
+                                } else {
+                                    habitViewModel.addHabit(habit)
+                                }
+                               // habitViewModel.addHabit(habit)
                                 snackbarHostState.showSnackbar("Hábito guardado")
                                 onHabitCreated()
                             } catch (e: Exception) {

@@ -16,10 +16,10 @@ import com.jmgg.habitus.ui.main.components.HabitCard
 @Composable
 fun MainScreen(navController: NavController) {
     val habitViewModel = HabitusApp.habitViewModel
-    val authViewModel = HabitusApp.authViewModel
-    val currentUser = authViewModel.currentUser.collectAsState().value
-
+    val currentUser = HabitusApp.authViewModel.currentUser.collectAsState().value
     val habits by habitViewModel.habits.collectAsState()
+    val completedHabits = habitViewModel.completedHabits.collectAsState().value // para los stats
+
 
     LaunchedEffect(currentUser) {
         currentUser?.let {
@@ -27,53 +27,37 @@ fun MainScreen(navController: NavController) {
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Mis Hábitos") },
-                actions = {
-                    // Aquí podrías agregar botón para cerrar sesión, etc.
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate("createHabit")
-            }) {
-                Text("+")
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (habits.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Aún no tienes hábitos registrados")
             }
-        }
-    ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
-
-            if (habits.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Aún no tienes hábitos registrados")
-                }
-            } else {
-                LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                    items(habits) { habit ->
-                        HabitCard(
-                            habit = habit,
-                            onClick = {
-                                navController.navigate("habitDetails/${habit.id}")
-                            },
-                            onEdit = {
-                                navController.navigate("editHabit/${habit.id}")
-                            },
-                            onDelete = {
-                                if (habit.id != null && habit.userId != null) {
-                                    habitViewModel.deleteHabit(habit.id, habit.userId)
-                                }
+        } else {
+            LazyColumn(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                items(habits) { habit ->
+                    HabitCard(
+                        habit = habit,
+                        isPremium = currentUser?.isPremium == true,
+                        isCompleted = completedHabits[habit.id ?: -1] == true,
+                        onToggleCompleted = {
+                            habit.id?.let { habitViewModel.toggleHabitCompleted(it) }
+                        },
+                        onClick = {
+                            navController.navigate("createHabit/${habit.id}")
+                        },
+                        onEdit = {
+                            navController.navigate("editHabit/${habit.id}")
+                        },
+                        onDelete = {
+                            if (habit.id != null && habit.userId != null) {
+                                habitViewModel.deleteHabit(habit.id, habit.userId)
                             }
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
+
     }
 }
