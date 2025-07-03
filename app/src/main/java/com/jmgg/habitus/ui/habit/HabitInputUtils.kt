@@ -12,9 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 
 import androidx.compose.foundation.layout.* // Para Column, Spacer, fillMaxWidth, padding, etc.
+import androidx.compose.material3.AlertDialog
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 
 import java.util.Calendar
 

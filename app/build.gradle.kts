@@ -58,7 +58,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.compose.material:material:1.8.3")
+
     implementation("androidx.navigation:navigation-compose:2.9.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
     implementation("androidx.room:room-runtime:2.7.2")
@@ -73,4 +73,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:3.0.0")
 
     implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+    implementation ("androidx.compose.ui:ui-text-google-fonts:1.8.3")
 }

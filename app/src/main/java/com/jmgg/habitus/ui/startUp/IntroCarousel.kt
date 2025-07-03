@@ -7,17 +7,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.rememberPagerState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.background
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.auth.AuthPagerPage
 import com.jmgg.habitus.ui.startUp.FeaturesScreens.*
 
 
-@OptIn(ExperimentalPagerApi::class)
+/*@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IntroCarousel(
     onCarouselEnd: () -> Unit
@@ -25,9 +28,11 @@ fun IntroCarousel(
     val viewModel = HabitusApp.authViewModel
     val user by viewModel.currentUser.collectAsState()
     val isPremium = user?.isPremium == true
-    val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val authPageIndex = 5
+    val pagerState = rememberPagerState(initialPage = 0){
+        5
+    }
 
     val pages = buildList<@Composable () -> Unit> {
         add { WelcomeScreen() }
@@ -54,7 +59,7 @@ fun IntroCarousel(
 
     Box(Modifier.fillMaxSize()) {
         HorizontalPager(
-            count = pages.size,
+            pageCount = pages.size,
             state = pagerState,
             userScrollEnabled = userScrollEnabled,
             modifier = Modifier.fillMaxSize()
@@ -68,12 +73,15 @@ fun IntroCarousel(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
-            HorizontalPagerIndicator(
+
+            CustomHorizontalPagerIndicator(
                 pagerState = pagerState,
+                pageCount = pages.size,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 activeColor = Color(0xFF6366F1),
                 inactiveColor = Color(0xFF94A3B8)
             )
+
             Spacer(Modifier.height(8.dp))
 
             Row(
@@ -124,3 +132,30 @@ fun IntroCarousel(
         }
     }
 }
+
+@Composable
+fun CustomHorizontalPagerIndicator(
+    pagerState: PagerState,
+    pageCount: Int,
+    modifier: Modifier = Modifier,
+    activeColor: Color = Color(0xFF6366F1),
+    inactiveColor: Color = Color(0xFF94A3B8),
+    indicatorSize: Dp = 8.dp,
+    spacing: Dp = 8.dp
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(spacing),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(pageCount) { iteration ->
+            val color = if (pagerState.currentPage == iteration) activeColor else inactiveColor
+            Box(
+                modifier = Modifier
+                    .size(indicatorSize)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(color)
+            )
+        }
+    }
+}*/
