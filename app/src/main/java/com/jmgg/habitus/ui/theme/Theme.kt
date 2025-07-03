@@ -1,6 +1,5 @@
 package com.jmgg.habitus.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +9,12 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import com.jmgg.habitus.R
+
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -33,10 +38,18 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val fontProvider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
+val juaFontFamily = FontFamily(Font(GoogleFont("Jua"), fontProvider))
+val jejuFontFamily = FontFamily(Font(GoogleFont("JejuGothic"), fontProvider))
+
 @Composable
 fun HabitusTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

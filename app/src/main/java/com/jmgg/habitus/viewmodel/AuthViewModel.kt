@@ -23,7 +23,7 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
                 _currentUser.value = user
                 _authError.value = null
             } else {
-                _authError.value = "Credenciales incorrectas"
+                _authError.value = "Incorrect credentials"
             }
         }
     }
@@ -32,16 +32,22 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             val success = repository.registerUser(user)
             if (success) {
-                val newUser = repository.loginUser(user.email, user.password) //
-                _currentUser.value = newUser
+                val newUser=repository.loginUser(user.email,user.password)
+                _currentUser.value=newUser
                 _authError.value = null
             } else {
-                _authError.value = "Error al registrar usuario"
+                _authError.value = "Error signing up, please check that you have added the data correctly"
             }
         }
     }
+
+
     fun logout() {
         _currentUser.value = null
+    }
+
+    fun clearError() {
+        _authError.value = null
     }
 
 }
