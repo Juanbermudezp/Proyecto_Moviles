@@ -1,7 +1,19 @@
 package com.jmgg.habitus.ui.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
@@ -11,10 +23,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.models.User
+import com.jmgg.habitus.ui.auth.Components.CustomOutlinedTextField
 
 @Composable
 fun RegisterScreen(
@@ -28,117 +42,164 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var isPremium by remember { mutableStateOf(false) }
+    var showValidationError by remember { mutableStateOf(false) }
+    var showPassword by remember { mutableStateOf(false) }
+    var showConfirmPassword by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
-    var registrationSuccess by remember { mutableStateOf(false) }
 
-    if (registrationSuccess) {
-        onRegistrationSuccess()
-    }
-
-    Column(
-        modifier = Modifier
+    Box(
+        Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(Color(0xFF0F172A))
+            .padding(25.dp)
+            .verticalScroll(scrollState)
     ) {
-        Text("Crea tu cuenta", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 90.dp)
 
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Nombre completo") },
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Correo electrónico") },
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+        ) {
+            Text(
+                "SIGN UP",
+                style = MaterialTheme.typography.displaySmall,
+                color = Color(0xFF6366F1),
+                modifier = Modifier.padding(bottom = 24.dp)
             )
-        )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next
+            CustomOutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "User Name",
+                leadingIcon = Icons.Default.Person,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier.fillMaxWidth()
             )
-        )
+            Spacer(Modifier.height(8.dp))
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirmar contraseña") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
+            CustomOutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = "Email",
+                leadingIcon = Icons.Default.Email,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier.fillMaxWidth()
             )
-        )
+            Spacer(Modifier.height(8.dp))
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = isPremium,
-                onCheckedChange = { isPremium = it }
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text("Cuenta Premium")
-        }
-
-        if (error != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(error ?: "", color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                if (password == confirmPassword && name.isNotBlank() && email.isNotBlank()) {
-                    viewModel.register(
-                        User(
-                            name = name.trim(),
-                            email = email.trim(),
-                            password = password.trim(),
-                            isPremium = isPremium
+            CustomOutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = "Password",
+                leadingIcon = Icons.Default.Lock,
+                visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(
+                        onClick = { showPassword = !showPassword }
+                    ) {
+                        Icon(
+                            imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                            contentDescription = null, tint = Color.White
                         )
-                    )
-                    registrationSuccess = true
-                } else {
-                    viewModel.login("", "") // Reset login
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Registrarse")
-        }
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        TextButton(
-            onClick = onNavigateToLogin,
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Text("¿Ya tienes cuenta? Inicia sesión")
+            Spacer(Modifier.height(8.dp))
+
+            CustomOutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = "Confirm Password",
+                leadingIcon = Icons.Default.Lock,
+                visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            showConfirmPassword = !showConfirmPassword
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (showConfirmPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                            contentDescription = null, tint = Color.White
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            if (showValidationError) {
+                Text(
+                    "All fields are required and passwords must match",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+            Button(
+                onClick = {
+                    val valid = name.isNotBlank()
+                            && email.isNotBlank()
+                            && password.isNotBlank()
+                            && password == confirmPassword
+                    if (valid) {
+                        viewModel.register(
+                            User(
+                                name = name.trim(),
+                                email = email.trim(),
+                                password = password.trim(),
+                                isPremium = false
+                            )
+                        )
+                        onRegistrationSuccess()
+                    } else {
+                        showValidationError = true
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF6366F1)),
+                shape = RoundedCornerShape(30),
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .height(40.dp)
+            ) {
+                Text("Sign up", color = Color.White, style = MaterialTheme.typography.titleMedium)
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            TextButton(onClick = onNavigateToLogin) {
+                Text(
+                    "i already have an account!",
+                    color = Color(0xFF10B981),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+
+            if (error != null) {
+                Spacer(Modifier.height(8.dp))
+                Text(error!!, color = MaterialTheme.colorScheme.error)
+            }
         }
     }
 }

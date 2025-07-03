@@ -1,9 +1,12 @@
 package com.jmgg.habitus.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.jmgg.habitus.ui.auth.LoginScreen
 import com.jmgg.habitus.ui.auth.RegisterScreen
 import com.jmgg.habitus.ui.habit.CreateHabitScreen
@@ -11,10 +14,15 @@ import com.jmgg.habitus.ui.habit.EditHabitScreen
 import com.jmgg.habitus.ui.habit.HabitDetailsScreen
 import com.jmgg.habitus.ui.main.MainScreen
 import com.jmgg.habitus.ui.premium.RecommendedRoutinesScreen
+import com.jmgg.habitus.ui.premium.RoutineDetailScreen
 import com.jmgg.habitus.ui.stats.StatsScreen
 
 @Composable
-fun AppNavHost(navController: NavHostController, startDestination: String = "login") {
+fun AppNavHost(
+    navController: NavHostController,
+    startDestination: String = "login",
+    modifier: Modifier
+) {
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable("login") {
@@ -58,18 +66,35 @@ fun AppNavHost(navController: NavHostController, startDestination: String = "log
                 }
             )
         }
+        composable("main") {
+            MainScreen(navController)
+        }
 
+        //premium screens
 
         composable("stats") {
             StatsScreen()
         }
 
         composable("routines") {
-            RecommendedRoutinesScreen()
+            RecommendedRoutinesScreen( navController)
         }
 
-        composable("main") {
-            MainScreen(navController)
+        composable("createHabit/{habitId}", arguments = listOf(
+            navArgument("habitId") { type = NavType.IntType; defaultValue = -1 }
+        )) { backStackEntry ->
+            val habitId = backStackEntry.arguments?.getInt("habitId")?.takeIf { it != -1 }
+            CreateHabitScreen(onHabitCreated = { navController.popBackStack() }, habitId = habitId)
+        }
+        composable(
+            route = "routineDetail/{routineId}",
+            arguments = listOf(navArgument("routineId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val routineId = backStackEntry.arguments?.getString("routineId") ?: ""
+            RoutineDetailScreen(
+                routineId = routineId,
+                onRoutineAdded = { navController.popBackStack() }
+            )
         }
     }
 }

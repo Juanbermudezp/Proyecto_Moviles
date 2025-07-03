@@ -1,7 +1,9 @@
 package com.jmgg.habitus.ui.habit
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -32,6 +34,8 @@ fun EditHabitScreen(
     var reminderTime by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
+
 
     // Cargar hábito solo una vez
     LaunchedEffect(habitId) {
@@ -53,7 +57,8 @@ fun EditHabitScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(24.dp)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top
     ) {
         Text("Editar Hábito", style = MaterialTheme.typography.headlineSmall)
@@ -77,21 +82,17 @@ fun EditHabitScreen(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = frequency,
-            onValueChange = { frequency = it },
-            label = { Text("Frecuencia (ej: 3 veces/semana)") },
-            modifier = Modifier.fillMaxWidth()
+     
+        FrequencyPicker(
+            currentFrequency = frequency,
+            onFrequencySelected = { frequency = it }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = reminderTime,
-            onValueChange = { reminderTime = it },
-            label = { Text("Hora de recordatorio (opcional)") },
-            modifier = Modifier.fillMaxWidth()
+        ReminderTimePicker(
+            currentTime = reminderTime,
+            onTimeSelected = { reminderTime = it }
         )
 
         Spacer(modifier = Modifier.height(8.dp))

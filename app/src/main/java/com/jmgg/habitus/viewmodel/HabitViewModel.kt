@@ -16,6 +16,16 @@ class HabitViewModel(private val repository: HabitRepository) : ViewModel() {
     private val _selectedHabit = MutableStateFlow<Habit?>(null)
     val selectedHabit: StateFlow<Habit?> = _selectedHabit
 
+    private val _completedHabits = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
+    val completedHabits: StateFlow<Map<Int, Boolean>> = _completedHabits
+
+    fun toggleHabitCompleted(habitId: Int) {
+        _completedHabits.value = _completedHabits.value.toMutableMap().apply {
+            this[habitId] = !(this[habitId] ?: false)
+        }
+    }
+
+
     fun loadHabits(userId: Int) {
         viewModelScope.launch {
             _habits.value = repository.getHabitsByUser(userId)

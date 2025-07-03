@@ -2,33 +2,22 @@ package com.jmgg.habitus.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    displayLarge = TextStyle(fontFamily = juaFontFamily, fontSize = 57.sp),
+    displayMedium = TextStyle(fontFamily = juaFontFamily, fontSize = 45.sp),
+    displaySmall = TextStyle(fontFamily = juaFontFamily, fontSize = 36.sp),
+    headlineLarge = TextStyle(fontFamily = juaFontFamily, fontSize = 32.sp),
+    headlineMedium = TextStyle(fontFamily = juaFontFamily, fontSize = 28.sp),
+    headlineSmall = TextStyle(fontFamily = juaFontFamily, fontSize = 24.sp),
+    titleLarge = TextStyle(fontFamily = jejuFontFamily, fontSize = 22.sp),
+    titleMedium = TextStyle(fontFamily = jejuFontFamily, fontSize = 16.sp),
+    titleSmall = TextStyle(fontFamily = jejuFontFamily, fontSize = 14.sp),
+    bodyLarge = TextStyle(fontFamily = jejuFontFamily, fontSize = 16.sp),
+    bodyMedium = TextStyle(fontFamily = jejuFontFamily, fontSize = 14.sp),
+    bodySmall = TextStyle(fontFamily = jejuFontFamily, fontSize = 12.sp),
+    labelLarge = TextStyle(fontFamily = jejuFontFamily, fontSize = 14.sp),
+    labelMedium = TextStyle(fontFamily = jejuFontFamily, fontSize = 12.sp),
+    labelSmall = TextStyle(fontFamily = jejuFontFamily, fontSize = 11.sp)
 )
