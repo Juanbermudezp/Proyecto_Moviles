@@ -55,11 +55,14 @@ fun StatsScreen() {
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Tus estadísticas", style = MaterialTheme.typography.headlineSmall)
+        Text(
+            text = "Tus estadísticas",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
             .background(Color(0xFF0f172a))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
+            .padding(16.dp)
+        )
+
         Text(
             text = "Estadísticas del Mes",
             color = Color(0xFFf8fafc),
@@ -82,8 +85,7 @@ fun StatsScreen() {
         byCategory.forEach { (category, count) ->
             Text("- $category: $count hábitos")
         }
-    }
-}
+
         Text(text = "Días activos:",
             color = Color(0xFFf8fafc),
             fontSize = 18.sp,
@@ -91,6 +93,8 @@ fun StatsScreen() {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+    }
+}
 
 @Composable
 fun CardStat(title: String, value: String) {
