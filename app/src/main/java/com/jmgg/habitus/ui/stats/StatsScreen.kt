@@ -56,6 +56,16 @@ fun StatsScreen() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Tus estadísticas", style = MaterialTheme.typography.headlineSmall)
+            .background(Color(0xFF0f172a))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        Text(
+            text = "Estadísticas del Mes",
+            color = Color(0xFFf8fafc),
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.headlineSmall
+        )
 
         CompletionChart(completed, pending)
 
@@ -74,6 +84,13 @@ fun StatsScreen() {
         }
     }
 }
+        Text(text = "Días activos:",
+            color = Color(0xFFf8fafc),
+            fontSize = 18.sp,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
 @Composable
 fun CardStat(title: String, value: String) {
