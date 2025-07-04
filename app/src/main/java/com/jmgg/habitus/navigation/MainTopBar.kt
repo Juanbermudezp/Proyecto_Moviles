@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.DpOffset
 
@@ -25,20 +26,36 @@ fun MainTopBar(
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text(text = routeToTitle(currentRoute)) },
+        title = {
+            Text(
+                text = routeToTitle(currentRoute),
+                color = Color(0xFFF8FAFC)
+            ) },
+
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF0F172A),
+            navigationIconContentColor = Color(0xFF6366F1),
+            titleContentColor = Color(0xFFF8FAFC)
+        ),
+
         navigationIcon = {
             Box {
                 IconButton(onClick = { expanded = true }) {
-                    Icon(Icons.Default.Menu, contentDescription = "Menú")
+                    Icon(Icons.Default.Menu,
+                        contentDescription = "Menú",
+                        tint = Color(0xFF6366F1)
+                    )
                 }
 
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    offset = DpOffset(x = 0.dp, y = 0.dp)
+                    offset = DpOffset(x = 0.dp, y = 0.dp),
+                    containerColor = Color(0xFF475569)
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Inicio") },
+                        text = { Text("Inicio",
+                            color = Color(0xFFF8FAFC)) },
                         onClick = {
                             expanded = false
                             onNavigateToHome()
@@ -46,14 +63,16 @@ fun MainTopBar(
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
-                                contentDescription = "Inicio"
+                                contentDescription = "Inicio",
+                                tint = Color(0xFF6366F1)
                             )
                         }
                     )
 
                     if (isPremium) {
                         DropdownMenuItem(
-                            text = { Text("Estadísticas") },
+                            text = { Text("Estadísticas",
+                                color = Color(0xFFF8FAFC))},
                             onClick = {
                                 expanded = false
                                 onNavigateToStats()
@@ -61,13 +80,15 @@ fun MainTopBar(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.BarChart,
-                                    contentDescription = "Estadísticas"
+                                    contentDescription = "Estadísticas",
+                                    tint = Color(0xFF6366F1)
                                 )
                             }
                         )
 
                         DropdownMenuItem(
-                            text = { Text("Rutinas") },
+                            text = { Text("Rutinas",
+                                color = Color(0xFFF8FAFC)) },
                             onClick = {
                                 expanded = false
                                 onNavigateToRoutines()
@@ -75,16 +96,18 @@ fun MainTopBar(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Star,
-                                    contentDescription = "Rutinas"
+                                    contentDescription = "Rutinas",
+                                    tint = Color(0xFF6366F1)
                                 )
                             }
                         )
                     }
 
-                    Divider()
+                    Divider(color = Color(0xFF334155))
 
                     DropdownMenuItem(
-                        text = { Text("Salir") },
+                        text = { Text("Salir",
+                            color = Color(0xFFF8FAFC)) },
                         onClick = {
                             expanded = false
                             onLogout()
@@ -92,7 +115,8 @@ fun MainTopBar(
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.ExitToApp,
-                                contentDescription = "Cerrar sesión"
+                                contentDescription = "Cerrar sesión",
+                                tint = Color(0xFFEF4444)
                             )
                         }
                     )

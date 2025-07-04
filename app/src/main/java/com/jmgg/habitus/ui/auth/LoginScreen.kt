@@ -98,7 +98,8 @@ fun LoginScreen(
                     ) {
                         Icon(
                             imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = null, tint = Color.White
+                            contentDescription = null,
+                            tint = Color(0xFFF8FAFC)
                         )
                     }
                 },
@@ -114,7 +115,7 @@ fun LoginScreen(
             if (error != null) {
                 Text(
                     error!!,
-                    color = Color.Red,
+                    color = Color(0xFFEF4444),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
@@ -122,7 +123,10 @@ fun LoginScreen(
 
             Button(
                 onClick = { viewModel.login(email.trim(), password.trim()) },
-                colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF6366F1)),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0xFF6366F1),
+                    contentColor = Color(0xFF0F172A)
+                ),
                 shape = RoundedCornerShape(30),
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
@@ -130,7 +134,7 @@ fun LoginScreen(
             ) {
                 Text(
                     "Log In",
-                    color = Color.White,
+                    color = Color(0xFFF8FAFC),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
