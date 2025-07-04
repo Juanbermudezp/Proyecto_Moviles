@@ -168,4 +168,3 @@ fun CompletionChart(completed: Int, pending: Int) {
         )
     }
 }
-
