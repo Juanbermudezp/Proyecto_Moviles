@@ -56,6 +56,7 @@ fun IntroCarousel(
                 )
             }
             if (!isPremium) {
+
                 add { PremiumVersionOfferScreen(onContinue = onCarouselEnd) }
             }
         }

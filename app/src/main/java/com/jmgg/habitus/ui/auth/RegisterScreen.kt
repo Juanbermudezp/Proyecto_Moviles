@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Checkbox
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -36,6 +37,7 @@ fun RegisterScreen(
 ) {
     val viewModel = HabitusApp.authViewModel
     val error by viewModel.authError.collectAsState()
+    var isPremium by remember { mutableStateOf(false) }
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -149,6 +151,20 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(16.dp))
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+
+                ) {
+                Checkbox(
+                    checked = isPremium,
+                    onCheckedChange = { isPremium = it }
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                androidx.compose.material.Text("Sign up as Premium")
+            }
+
+            Spacer(Modifier.height(16.dp))
+
             if (showValidationError) {
                 Text(
                     "All fields are required and passwords must match",
@@ -170,7 +186,7 @@ fun RegisterScreen(
                                 name = name.trim(),
                                 email = email.trim(),
                                 password = password.trim(),
-                                isPremium = false
+                                isPremium = isPremium
                             )
                         )
                         onRegistrationSuccess()
