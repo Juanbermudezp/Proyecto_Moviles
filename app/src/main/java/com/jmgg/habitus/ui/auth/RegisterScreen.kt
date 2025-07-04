@@ -179,7 +179,7 @@ fun RegisterScreen(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFF6366F1),
+                    containerColor = Color(0xFF6366F1),
                     contentColor = Color(0xFF0F172A)
                 ),
                 shape = RoundedCornerShape(30),

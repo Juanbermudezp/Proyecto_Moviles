@@ -1,6 +1,7 @@
 package com.jmgg.habitus.ui.habit
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -19,7 +21,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateHabitScreen(
     onHabitCreated: () -> Unit,
-    habitId: Int? = null // para la navegación premium
+    habitId: Int? = null
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val user = HabitusApp.authViewModel.currentUser.collectAsState().value
@@ -35,7 +37,6 @@ fun CreateHabitScreen(
     var description by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
 
-    // ✅ Cargar hábito si es edición
     LaunchedEffect(habitId) {
         if (habitId != null) {
             habitViewModel.loadHabitById(habitId)
@@ -44,7 +45,6 @@ fun CreateHabitScreen(
 
     val selectedHabit = habitViewModel.selectedHabit.collectAsState().value
 
-    // ✅ Precargar campos si existe
     LaunchedEffect(selectedHabit) {
         selectedHabit?.let {
             name = it.name
@@ -57,11 +57,13 @@ fun CreateHabitScreen(
     }
 
     Scaffold(
+        containerColor = Color(0xFF0F172A),
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color(0xFF0F172A))
                 .padding(24.dp)
                 .padding(padding)
                 .verticalScroll(scrollState),
@@ -73,9 +75,11 @@ fun CreateHabitScreen(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Nombre del hábito") },
+                label = { Text("Nombre del hábito",
+                    color = Color(0xFFF8FAFC)) },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFFF8FAFC))
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -83,9 +87,12 @@ fun CreateHabitScreen(
             OutlinedTextField(
                 value = category,
                 onValueChange = { category = it },
-                label = { Text("Categoría") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Categoría",
+                    color = Color(0xFFF8FAFC)) },
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFFF8FAFC))
             )
+
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -106,8 +113,10 @@ fun CreateHabitScreen(
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
-                label = { Text("Descripción") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Descripción",
+                    color = Color(0xFFF8FAFC))},
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFFF8FAFC))
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -115,8 +124,10 @@ fun CreateHabitScreen(
             OutlinedTextField(
                 value = notes,
                 onValueChange = { notes = it },
-                label = { Text("Notas adicionales") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text("Notas adicionales",
+                    color = Color(0xFFF8FAFC)) },
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFFF8FAFC))
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -143,7 +154,6 @@ fun CreateHabitScreen(
                                     habitViewModel.addHabit(habit)
                                 }
 
-                                // 👉 Notificación si se indicó hora
                                 if (reminderTime.isNotBlank()) {
                                     val (hour, minute) = reminderTime.split(":").map { it.toInt() }
                                     AlarmScheduler.scheduleHabitReminder(
@@ -163,7 +173,11 @@ fun CreateHabitScreen(
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF34D399),
+                    contentColor = Color(0xFF0F172A)
+                )
             ) {
                 Text("Guardar hábito")
             }

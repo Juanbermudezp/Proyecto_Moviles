@@ -31,13 +31,10 @@ fun HabitDetailsScreen(
     var notes by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
-
-    // Cargar hábito desde ViewModel
     LaunchedEffect(habitId) {
         viewModel.loadHabitById(habitId)
     }
 
-    // Una vez que el hábito está cargado, llenamos los campos
     LaunchedEffect(habit) {
         habit?.let {
             name = it.name

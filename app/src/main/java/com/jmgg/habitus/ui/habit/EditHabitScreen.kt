@@ -35,12 +35,10 @@ fun EditHabitScreen(
     var notes by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
-    // Cargar hábito solo una vez
     LaunchedEffect(habitId) {
         habitViewModel.loadHabitById(habitId)
     }
 
-    // Cuando el hábito se carga, rellenar los campos
     LaunchedEffect(habitState) {
         habitState?.let {
             name = it.name
@@ -60,13 +58,6 @@ fun EditHabitScreen(
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top
     ) {
-        val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF6366F1),
-            unfocusedBorderColor = Color(0xFFF8FAFC),
-            textColor = Color(0xFFF8FAFC),
-            cursorColor = Color(0xFF6366F1)
-        )
-
         val labelColor = Color(0xFFF8FAFC)
 
         Text(
@@ -80,9 +71,9 @@ fun EditHabitScreen(
             value = name,
             onValueChange = { name = it },
             label = { Text("Nombre del hábito", color = labelColor) },
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = labelColor),
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            colors = textFieldColors
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -91,8 +82,8 @@ fun EditHabitScreen(
             value = category,
             onValueChange = { category = it },
             label = { Text("Categoría", color = labelColor) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = textFieldColors
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = labelColor),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -115,8 +106,8 @@ fun EditHabitScreen(
             value = description,
             onValueChange = { description = it },
             label = { Text("Descripción", color = labelColor) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = textFieldColors
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = labelColor),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -125,8 +116,8 @@ fun EditHabitScreen(
             value = notes,
             onValueChange = { notes = it },
             label = { Text("Notas adicionales", color = labelColor) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = textFieldColors
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = labelColor),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -160,7 +151,7 @@ fun EditHabitScreen(
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(0xFF34D399),
+                containerColor = Color(0xFF34D399),
                 contentColor = Color(0xFF0F172A)
             )
         ) {

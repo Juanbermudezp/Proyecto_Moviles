@@ -10,10 +10,8 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-
-import androidx.compose.foundation.layout.* // Para Column, Spacer, fillMaxWidth, padding, etc.
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.AlertDialog
-
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
