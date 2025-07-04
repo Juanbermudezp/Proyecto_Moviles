@@ -20,7 +20,6 @@ fun StatsScreen() {
     val currentUser = authViewModel.currentUser.collectAsState().value
     val scrollState = rememberScrollState()
 
-
     val habits by habitViewModel.habits.collectAsState()
     val completedMap by habitViewModel.completedHabits.collectAsState()
 
@@ -55,11 +54,15 @@ fun StatsScreen() {
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Tus estadísticas", style = MaterialTheme.typography.headlineSmall)
-            .background(Color(0xFF0f172a))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
+        Text(
+            "Tus estadísticas",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .background(Color(0xFF0f172a))
+                .padding(16.dp),
+            color = Color.White
+        )
+
         Text(
             text = "Estadísticas del Mes",
             color = Color(0xFFf8fafc),
@@ -82,15 +85,19 @@ fun StatsScreen() {
         byCategory.forEach { (category, count) ->
             Text("- $category: $count hábitos")
         }
-    }
-}
-        Text(text = "Días activos:",
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Días activos:",
             color = Color(0xFFf8fafc),
             fontSize = 18.sp,
             style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+    }
+}
 
 @Composable
 fun CardStat(title: String, value: String) {
@@ -142,4 +149,3 @@ fun CompletionChart(completed: Int, pending: Int) {
         Text("✅ Completados: $completed   ❌ Pendientes: $pending", fontSize = 14.sp)
     }
 }
-

@@ -5,34 +5,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.models.Habit
+import com.jmgg.habitus.utils.AlarmScheduler
 import kotlinx.coroutines.launch
 
 @Composable
 fun CreateHabitScreen(
     onHabitCreated: () -> Unit,
-    habitId: Int? = null //para la navegacion premium
+    habitId: Int? = null // para la navegación premium
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val user = HabitusApp.authViewModel.currentUser.collectAsState().value
     val scrollState = rememberScrollState()
-
-
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
@@ -131,7 +125,7 @@ fun CreateHabitScreen(
                 onClick = {
                     if (user != null && name.isNotBlank()) {
                         val habit = Habit(
-                            id = habitId, // ✅ Si es edición, usar el ID existente
+                            id = habitId,
                             userId = user.id,
                             name = name,
                             category = category,
@@ -140,6 +134,7 @@ fun CreateHabitScreen(
                             description = description,
                             notes = notes
                         )
+
                         coroutineScope.launch {
                             try {
                                 if (habitId != null) {
@@ -147,7 +142,18 @@ fun CreateHabitScreen(
                                 } else {
                                     habitViewModel.addHabit(habit)
                                 }
-                               // habitViewModel.addHabit(habit)
+
+                                // 👉 Notificación si se indicó hora
+                                if (reminderTime.isNotBlank()) {
+                                    val (hour, minute) = reminderTime.split(":").map { it.toInt() }
+                                    AlarmScheduler.scheduleHabitReminder(
+                                        context = context,
+                                        hour = hour,
+                                        minute = minute,
+                                        habitName = name
+                                    )
+                                }
+
                                 snackbarHostState.showSnackbar("Hábito guardado")
                                 onHabitCreated()
                             } catch (e: Exception) {
@@ -155,7 +161,6 @@ fun CreateHabitScreen(
                                 Log.e("CreateHabit", "Error al guardar hábito", e)
                             }
                         }
-
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
