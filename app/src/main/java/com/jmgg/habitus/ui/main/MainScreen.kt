@@ -40,7 +40,10 @@ fun MainScreen(navController: NavController) {
                 )
             }
         } else {
-            LazyColumn(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
                 items(habits) { habit ->
                     HabitCard(
                         habit = habit,

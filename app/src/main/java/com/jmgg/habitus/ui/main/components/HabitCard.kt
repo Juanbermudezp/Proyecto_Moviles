@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -35,11 +36,12 @@ fun HabitCard(
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(8.dp)
-            .background(Color(0xFF475569))
             .then(
                 if (isPremium && habit.id != null) Modifier.clickable { onClick() }
                 else Modifier
-            )
+            ),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF475569)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier
             .padding(16.dp)
