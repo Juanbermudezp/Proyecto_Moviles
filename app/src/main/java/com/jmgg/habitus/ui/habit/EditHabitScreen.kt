@@ -5,19 +5,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.platform.LocalContext
 import com.jmgg.habitus.HabitusApp
-import com.jmgg.habitus.models.Habit
-import kotlinx.coroutines.flow.collectLatest
+import com.jmgg.habitus.utils.AlarmScheduler
 import kotlinx.coroutines.launch
 
 @Composable
@@ -27,6 +23,7 @@ fun EditHabitScreen(
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current // ✅ Mover aquí para usarlo correctamente luego
 
     val habitState by habitViewModel.selectedHabit.collectAsState()
 
@@ -37,7 +34,6 @@ fun EditHabitScreen(
     var description by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
-
 
     // Cargar hábito solo una vez
     LaunchedEffect(habitId) {
@@ -100,7 +96,7 @@ fun EditHabitScreen(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-     
+
         FrequencyPicker(
             currentFrequency = frequency,
             onFrequencySelected = { frequency = it }
@@ -147,6 +143,18 @@ fun EditHabitScreen(
                         notes = notes
                     )
                     habitViewModel.updateHabit(updatedHabit)
+
+                    // 👉 Notificación de recordatorio si se indicó hora
+                    if (reminderTime.isNotBlank()) {
+                        val (hour, minute) = reminderTime.split(":").map { it.toInt() }
+                        AlarmScheduler.scheduleHabitReminder(
+                            context = context,
+                            hour = hour,
+                            minute = minute,
+                            habitName = name
+                        )
+                    }
+
                     onHabitUpdated()
                 }
             },

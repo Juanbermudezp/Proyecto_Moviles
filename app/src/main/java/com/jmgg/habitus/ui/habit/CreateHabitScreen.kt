@@ -1,40 +1,32 @@
 package com.jmgg.habitus.ui.habit
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.models.Habit
+import com.jmgg.habitus.utils.AlarmScheduler
 import kotlinx.coroutines.launch
 
 @Composable
 fun CreateHabitScreen(
     onHabitCreated: () -> Unit,
-    habitId: Int? = null //para la navegacion premium
+    habitId: Int? = null // para la navegación premium
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val user = HabitusApp.authViewModel.currentUser.collectAsState().value
     val scrollState = rememberScrollState()
-
-
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
@@ -65,22 +57,17 @@ fun CreateHabitScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFF0F172A),
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF0F172A))
                 .padding(24.dp)
                 .padding(padding)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top
         ) {
-            Text("Nuevo Hábito",
-                style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFFF8FAFC))
-            )
-
+            Text("Nuevo Hábito", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
@@ -88,13 +75,7 @@ fun CreateHabitScreen(
                 onValueChange = { name = it },
                 label = { Text("Nombre del hábito") },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF6366F1),
-                    unfocusedBorderColor = Color(0xFFF8FAFC),
-                    textColor = Color(0xFFF8FAFC),
-                    cursorColor = Color(0xFF6366F1)
-                )
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -103,13 +84,7 @@ fun CreateHabitScreen(
                 value = category,
                 onValueChange = { category = it },
                 label = { Text("Categoría") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF6366F1),
-                    unfocusedBorderColor = Color(0xFFF8FAFC),
-                    textColor = Color(0xFFF8FAFC),
-                    cursorColor = Color(0xFF6366F1)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -132,13 +107,7 @@ fun CreateHabitScreen(
                 value = description,
                 onValueChange = { description = it },
                 label = { Text("Descripción") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF6366F1),
-                    unfocusedBorderColor = Color(0xFFF8FAFC),
-                    textColor = Color(0xFFF8FAFC),
-                    cursorColor = Color(0xFF6366F1)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -147,13 +116,7 @@ fun CreateHabitScreen(
                 value = notes,
                 onValueChange = { notes = it },
                 label = { Text("Notas adicionales") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF6366F1),
-                    unfocusedBorderColor = Color(0xFFF8FAFC),
-                    textColor = Color(0xFFF8FAFC),
-                    cursorColor = Color(0xFF6366F1)
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -162,7 +125,7 @@ fun CreateHabitScreen(
                 onClick = {
                     if (user != null && name.isNotBlank()) {
                         val habit = Habit(
-                            id = habitId, // ✅ Si es edición, usar el ID existente
+                            id = habitId,
                             userId = user.id,
                             name = name,
                             category = category,
@@ -171,6 +134,7 @@ fun CreateHabitScreen(
                             description = description,
                             notes = notes
                         )
+
                         coroutineScope.launch {
                             try {
                                 if (habitId != null) {
@@ -178,7 +142,18 @@ fun CreateHabitScreen(
                                 } else {
                                     habitViewModel.addHabit(habit)
                                 }
-                               // habitViewModel.addHabit(habit)
+
+                                // 👉 Notificación si se indicó hora
+                                if (reminderTime.isNotBlank()) {
+                                    val (hour, minute) = reminderTime.split(":").map { it.toInt() }
+                                    AlarmScheduler.scheduleHabitReminder(
+                                        context = context,
+                                        hour = hour,
+                                        minute = minute,
+                                        habitName = name
+                                    )
+                                }
+
                                 snackbarHostState.showSnackbar("Hábito guardado")
                                 onHabitCreated()
                             } catch (e: Exception) {
@@ -186,14 +161,9 @@ fun CreateHabitScreen(
                                 Log.e("CreateHabit", "Error al guardar hábito", e)
                             }
                         }
-
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFF6366F1),
-                    contentColor = Color(0xFF0F172A)
-                )
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Guardar hábito")
             }

@@ -20,7 +20,6 @@ fun StatsScreen() {
     val currentUser = authViewModel.currentUser.collectAsState().value
     val scrollState = rememberScrollState()
 
-
     val habits by habitViewModel.habits.collectAsState()
     val completedMap by habitViewModel.completedHabits.collectAsState()
 
@@ -31,15 +30,8 @@ fun StatsScreen() {
     }
 
     if (currentUser == null) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0F172A)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "Inicia sesión para ver tus estadísticas",
-                color = Color(0xFFF8FAFC)
-            )
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Inicia sesión para ver tus estadísticas")
         }
         return
     }
@@ -58,20 +50,24 @@ fun StatsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A))
             .padding(24.dp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             "Tus estadísticas",
-            style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFFF8FAFC))
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .background(Color(0xFF0f172a))
+                .padding(16.dp),
+            color = Color.White
         )
 
         Text(
             text = "Estadísticas del Mes",
+            color = Color(0xFFf8fafc),
             fontSize = 20.sp,
-            style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFFF8FAFC))
+            style = MaterialTheme.typography.headlineSmall
         )
 
         CompletionChart(completed, pending)
@@ -85,19 +81,21 @@ fun StatsScreen() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Resumen por categoría:",
-            style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
-        )
+        Text("Resumen por categoría:", style = MaterialTheme.typography.titleMedium)
         byCategory.forEach { (category, count) ->
             Text("- $category: $count hábitos")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Text(text = "Días activos:",
-        fontSize = 18.sp,
-        style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
+        Text(
+            text = "Días activos:",
+            color = Color(0xFFf8fafc),
+            fontSize = 18.sp,
+            style = MaterialTheme.typography.titleMedium
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
@@ -105,17 +103,12 @@ fun StatsScreen() {
 fun CardStat(title: String, value: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF475569)),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title,
-                style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
-            )
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = value,
-                style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFFF8FAFC))
-            )
+            Text(text = value, style = MaterialTheme.typography.headlineSmall)
         }
     }
 }
@@ -125,19 +118,12 @@ fun CompletionChart(completed: Int, pending: Int) {
     val total = completed + pending
 
     if (total == 0) {
-        Text(
-            "No hay datos para mostrar el progreso aún.",
-            color = Color(0xFFF8FAFC)
-        )
+        Text("No hay datos para mostrar el progreso aún.")
         return
     }
 
     Column {
-        Text(
-            "Progreso de hábitos",
-            style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
-        )
-
+        Text("Progreso de hábitos", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(8.dp))
 
         Row(Modifier.fillMaxWidth()) {
@@ -146,7 +132,7 @@ fun CompletionChart(completed: Int, pending: Int) {
                     Modifier
                         .weight(completed.toFloat() / total)
                         .height(24.dp)
-                        .background(Color(0xFF4CAF50))
+                        .background(Color(0xFF4CAF50)) // Verde
                 )
             }
             if (pending > 0) {
@@ -154,17 +140,12 @@ fun CompletionChart(completed: Int, pending: Int) {
                     Modifier
                         .weight(pending.toFloat() / total)
                         .height(24.dp)
-                        .background(Color(0xFFF44336))
+                        .background(Color(0xFFF44336)) // Rojo
                 )
             }
         }
 
         Spacer(Modifier.height(8.dp))
-
-        Text(
-            "✅ Completados: $completed   ❌ Pendientes: $pending",
-            color = Color(0xFFF8FAFC),
-            fontSize = 14.sp
-        )
+        Text("✅ Completados: $completed   ❌ Pendientes: $pending", fontSize = 14.sp)
     }
 }
