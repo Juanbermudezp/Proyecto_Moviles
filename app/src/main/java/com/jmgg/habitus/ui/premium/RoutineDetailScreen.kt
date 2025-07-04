@@ -64,25 +64,54 @@ fun RoutineDetailScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            Text("Beneficios:",
-                style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
+            Text(
+                text = routineData.description,
+                style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFFF8FAFC))
             )
-            routineData.benefits.forEach { benefit ->
-                Text("• $benefit",
-                    color = Color(0xFFF8FAFC)
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    "Beneficios:",
+                    style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
                 )
+                routineData.benefits.forEach { benefit ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("•", color = Color(0xFF34D399))
+                        Spacer(Modifier.width(8.dp))
+                        Text(benefit, color = Color(0xFFF8FAFC))
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("Hábitos sugeridos:",
-                style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
-            )
-            routineData.habits.forEach {
-                Text("- ${it.name}",
-                    color = Color(0xFFF8FAFC)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "Hábitos sugeridos:",
+                    style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
                 )
+
+                routineData.habits.forEach {
+                    Button(
+                        onClick = {},
+                        enabled = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF475569),
+                            contentColor = Color(0xFFF8FAFC),
+                            disabledContainerColor = Color(0xFF475569),
+                            disabledContentColor = Color(0xFFF8FAFC)
+                        )
+                    ) {
+                        Text(it.name)
+                    }
+                }
             }
+
 
             Spacer(modifier = Modifier.height(32.dp))
 

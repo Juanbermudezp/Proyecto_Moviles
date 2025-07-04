@@ -4,6 +4,7 @@ import com.jmgg.habitus.models.Habit
 
 data class RoutineDefinition(
     val title: String,
+    val description: String,
     val benefits: List<String>,
     val habits: List<Habit>
 )
@@ -12,6 +13,7 @@ fun getPredefinedRoutine(id: String, userId: Int): RoutineDefinition? {
     return when (id) {
         "sleep" -> RoutineDefinition(
             title = "Dormir mejor y más rápido",
+            description = "Esta rutina te ayudará a mejorar la calidad de tu sueño y a establecer un horario saludable.",
             benefits = listOf("Dormir más rápido", "Menos estrés", "Horario saludable", "Más energía en el día"),
             habits = listOf(
                 Habit(userId = userId, name = "Dormir 8 horas", category = "Salud", frequency = "Diario"),
@@ -22,6 +24,7 @@ fun getPredefinedRoutine(id: String, userId: Int): RoutineDefinition? {
 
         "mental" -> RoutineDefinition(
             title = "Salud mental y relajación",
+            description = "Esta rutina está diseñada para mejorar tu bienestar mental y ayudarte a relajarte.",
             benefits = listOf("Reducir ansiedad", "Mejor enfoque", "Mayor autocontrol"),
             habits = listOf(
                 Habit(userId = userId, name = "Respirar profundo", category = "Mental", frequency = "Diario"),
@@ -32,6 +35,7 @@ fun getPredefinedRoutine(id: String, userId: Int): RoutineDefinition? {
 
         "fitness" -> RoutineDefinition(
             title = "Estilo de vida activo",
+            description = "Esta rutina te ayudará a mantenerte activo y en forma, mejorando tu salud física y mental.",
             benefits = listOf("Más energía", "Mejor salud", "Mayor fuerza"),
             habits = listOf(
                 Habit(userId = userId, name = "Ejercicio diario", category = "Físico", frequency = "Diario"),

@@ -61,7 +61,7 @@ fun RecommendedRoutinesScreen(navController: NavController) {
         routines.forEach { (id, title) ->
             RoutineCard(
                 title = title,
-                description = "Toca para más detalles",
+                description = "Presiona para más detalles",
                 onSelect = {
                     navController.navigate("routineDetail/$id")
                 }
