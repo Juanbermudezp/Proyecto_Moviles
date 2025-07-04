@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -53,7 +54,7 @@ fun RegisterScreen(
         Modifier
             .fillMaxSize()
             .background(Color(0xFF0F172A))
-            .padding(25.dp)
+            .padding(10.dp)
             .verticalScroll(scrollState)
     ) {
         Column(
@@ -157,10 +158,15 @@ fun RegisterScreen(
                 ) {
                 Checkbox(
                     checked = isPremium,
-                    onCheckedChange = { isPremium = it }
+                    onCheckedChange = { isPremium = it },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color.White,
+                        uncheckedColor = Color.White,
+                        checkmarkColor = Color(0xFF0F172A)
+                    )
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                androidx.compose.material.Text("Sign up as Premium")
+                Text("Sign up as Premium", color = Color.White)
             }
 
             Spacer(Modifier.height(16.dp))
