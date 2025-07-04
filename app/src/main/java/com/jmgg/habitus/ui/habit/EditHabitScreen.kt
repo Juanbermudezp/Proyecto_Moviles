@@ -23,7 +23,7 @@ fun EditHabitScreen(
 ) {
     val habitViewModel = HabitusApp.habitViewModel
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current // ✅ Mover aquí para usarlo correctamente luego
+    val context = LocalContext.current
 
     val habitState by habitViewModel.selectedHabit.collectAsState()
 
@@ -135,7 +135,6 @@ fun EditHabitScreen(
                     )
                     habitViewModel.updateHabit(updatedHabit)
 
-                    // 👉 Notificación de recordatorio si se indicó hora
                     if (reminderTime.isNotBlank()) {
                         val (hour, minute) = reminderTime.split(":").map { it.toInt() }
                         AlarmScheduler.scheduleHabitReminder(

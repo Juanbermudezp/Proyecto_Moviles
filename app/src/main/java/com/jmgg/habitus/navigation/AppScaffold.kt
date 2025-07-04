@@ -26,19 +26,16 @@ fun AppScaffold() {
     val context = LocalContext.current
     val currentUser = HabitusApp.authViewModel.currentUser.collectAsState().value
 
-    // Revisa si ya terminó el onboarding
     val alreadyDone by context.dataStore.data
         .isOnboardingComplete()
         .collectAsState(initial = false)
 
-    // Determina la ruta inicial
     val startDestination = if (!alreadyDone || currentUser == null) {
         "intro"
     } else {
         "main"
     }
 
-    // Ruta actual para mostrar u ocultar barras
     val currentRoute = navController.currentBackStackEntryFlow
         .collectAsState(null).value?.destination?.route
     val hideBars = currentRoute in listOf("login", "register", "intro")
