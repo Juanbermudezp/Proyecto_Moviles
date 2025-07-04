@@ -7,20 +7,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.background
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.auth.AuthPagerPage
+import com.jmgg.habitus.ui.startUp.FeaturesScreen.Components.CustomHorizontalPagerIndicator
 import com.jmgg.habitus.ui.startUp.FeaturesScreens.*
 
 
-/*@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 fun IntroCarousel(
     onCarouselEnd: () -> Unit
@@ -28,38 +24,60 @@ fun IntroCarousel(
     val viewModel = HabitusApp.authViewModel
     val user by viewModel.currentUser.collectAsState()
     val isPremium = user?.isPremium == true
+
+    val basePages = 5
+    val extraPages = if (isPremium) 1 else 2
+    val totalPages = basePages + extraPages
+    val authPageIndex = basePages
+    val offerPageIndex = basePages + 1
+    val lastPageIndex = totalPages - 1
+
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { totalPages }
+    )
     val coroutineScope = rememberCoroutineScope()
-    val authPageIndex = 5
-    val pagerState = rememberPagerState(initialPage = 0){
-        5
+
+
+    var shouldNavigateToOffer by remember { mutableStateOf(false) }
+
+    val pages = remember(isPremium) {
+        buildList<@Composable () -> Unit> {
+            add { WelcomeScreen() }
+            add { FirstFeatureScreen() }
+            add { SecondFeatureScreen() }
+            add { ThirdFeatureScreen() }
+            add { FourthFeatureScreen() }
+            add {
+                AuthPagerPage(
+                    onLoggedIn = {
+                        shouldNavigateToOffer = true
+                    }
+                )
+            }
+            if (!isPremium) {
+                add { PremiumVersionOfferScreen(onContinue = onCarouselEnd) }
+            }
+        }
     }
 
-    val pages = buildList<@Composable () -> Unit> {
-        add { WelcomeScreen() }
-        add { FirstFeatureScreen() }
-        add { SecondFeatureScreen() }
-        add { ThirdFeatureScreen() }
-        add { FourthFeatureScreen() }
-        add {
-            AuthPagerPage(onLoggedIn = {
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(authPageIndex + 1)
-                }
-            })
-        }
-        if (!isPremium) {
-            add { PremiumVersionOfferScreen(onContinue = onCarouselEnd) }
-        }
-    }
-
-    val lastPageIndex = pages.lastIndex
-    val lockSwipeAuth = pagerState.currentPage == authPageIndex && user == null
-    val lockSwipeOffer = pagerState.currentPage == lastPageIndex
+    val atAuthPage = pagerState.currentPage == authPageIndex
+    val atOfferPage = pagerState.currentPage == lastPageIndex && !isPremium
+    val lockSwipeAuth = atAuthPage && user == null
+    val lockSwipeOffer = false
     val userScrollEnabled = !(lockSwipeAuth || lockSwipeOffer)
+
+
+    LaunchedEffect(shouldNavigateToOffer) {
+        if (shouldNavigateToOffer && !isPremium) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(offerPageIndex)
+            }
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
         HorizontalPager(
-            pageCount = pages.size,
             state = pagerState,
             userScrollEnabled = userScrollEnabled,
             modifier = Modifier.fillMaxSize()
@@ -73,10 +91,9 @@ fun IntroCarousel(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
-
             CustomHorizontalPagerIndicator(
                 pagerState = pagerState,
-                pageCount = pages.size,
+                pageCount = totalPages,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 activeColor = Color(0xFF6366F1),
                 inactiveColor = Color(0xFF94A3B8)
@@ -88,28 +105,21 @@ fun IntroCarousel(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
-                if (pagerState.currentPage != lastPageIndex) {
-                    TextButton(
-                        enabled = pagerState.currentPage > 0,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                            }
+                TextButton(
+                    enabled = pagerState.currentPage > 0 && !atOfferPage,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
                         }
-                    ) {
-                        Text(
-                            "Back",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
                     }
-                } else {
-                    Spacer(modifier = Modifier.width(64.dp))
+                ) {
+                    Text("Back", color = Color.White)
                 }
 
-                if (!lockSwipeAuth) {
-                    val isLast = pagerState.currentPage == lastPageIndex
+                val isLast = pagerState.currentPage == lastPageIndex
+                val canShowContinue = !(atAuthPage && user == null)
+
+                if (canShowContinue) {
                     Button(
                         onClick = {
                             coroutineScope.launch {
@@ -119,12 +129,12 @@ fun IntroCarousel(
                                     onCarouselEnd()
                                 }
                             }
-                        }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6366F1))
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6366F1))
                     ) {
                         Text(
                             if (!isLast) "Continue" else "Start",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyLarge
+                            color = Color.White
                         )
                     }
                 }
@@ -133,29 +143,3 @@ fun IntroCarousel(
     }
 }
 
-@Composable
-fun CustomHorizontalPagerIndicator(
-    pagerState: PagerState,
-    pageCount: Int,
-    modifier: Modifier = Modifier,
-    activeColor: Color = Color(0xFF6366F1),
-    inactiveColor: Color = Color(0xFF94A3B8),
-    indicatorSize: Dp = 8.dp,
-    spacing: Dp = 8.dp
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(spacing),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        repeat(pageCount) { iteration ->
-            val color = if (pagerState.currentPage == iteration) activeColor else inactiveColor
-            Box(
-                modifier = Modifier
-                    .size(indicatorSize)
-                    .clip(MaterialTheme.shapes.small)
-                    .background(color)
-            )
-        }
-    }
-}*/

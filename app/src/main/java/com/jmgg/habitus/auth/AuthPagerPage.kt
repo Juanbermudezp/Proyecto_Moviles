@@ -30,7 +30,9 @@ fun AuthPagerPage(
     ) {
         if (isLoginMode) {
             LoginScreen(
-                onLoginSuccess = { onLoggedIn() },
+                onLoginSuccess = {
+                    onLoggedIn()
+                },
                 onNavigateToRegister = {
                     isLoginMode = false
                     viewModel.clearError()
@@ -38,7 +40,9 @@ fun AuthPagerPage(
             )
         } else {
             RegisterScreen(
-                onRegistrationSuccess = { onLoggedIn() },
+                onRegistrationSuccess = {
+                    onLoggedIn()
+                },
                 onNavigateToLogin = {
                     isLoginMode = true
                     viewModel.clearError()
