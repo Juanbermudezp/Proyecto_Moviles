@@ -36,7 +36,6 @@ fun AppNavHost(
         modifier = modifier
     ) {
 
-        // 👉 Intro (carousel de bienvenida)
         composable("intro") {
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
@@ -50,7 +49,6 @@ fun AppNavHost(
             })
         }
 
-        // 👉 Login y registro
         composable("login") {
             LoginScreen(
                 onLoginSuccess = { navController.navigate("main") },
@@ -65,12 +63,10 @@ fun AppNavHost(
             )
         }
 
-        // 👉 Pantalla principal
         composable("main") {
             MainScreen(navController)
         }
 
-        // 👉 Crear hábito (nueva o edición con ID)
         composable("createHabit") {
             CreateHabitScreen(
                 onHabitCreated = { navController.popBackStack() }
@@ -90,7 +86,6 @@ fun AppNavHost(
             )
         }
 
-        // 👉 Detalles y edición de hábitos
         composable("habitDetails/{habitId}") { backStackEntry ->
             val habitId = backStackEntry.arguments?.getString("habitId")?.toIntOrNull()
                 ?: return@composable
@@ -109,7 +104,6 @@ fun AppNavHost(
             )
         }
 
-        // 👉 Pantallas de premium, estadísticas y rutinas
         composable("premiumOffer") {
             PremiumVersionOfferScreen(onContinue = { navController.navigate("main") })
         }
