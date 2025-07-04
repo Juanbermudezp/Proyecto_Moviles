@@ -51,6 +51,7 @@ fun AppScaffold() {
                     onNavigateToHome = { navController.navigate("main") },
                     onNavigateToStats = { navController.navigate("stats") },
                     onNavigateToRoutines = { navController.navigate("routines") },
+                    onNavigateToOfert = { navController.navigate("premiumOffer") }
                 )
             }
         },

@@ -16,6 +16,7 @@ fun MainBottomNavBar(
     onNavigateToHome: () -> Unit,
     onNavigateToStats: () -> Unit,
     onNavigateToRoutines: () -> Unit,
+    onNavigateToOfert: () -> Unit
 ) {
 
     NavigationBar (
@@ -66,5 +67,38 @@ fun MainBottomNavBar(
                 }
             )
         }
+        if(!isPremium){
+            NavigationBarItem(
+                selected = currentRoute == "premiumOffer",
+                onClick = onNavigateToOfert,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.BarChart,
+                        contentDescription = "Estadísticas",
+                        tint = if (currentRoute == "stats") Color(0xFF34D399) else Color(0xFF6366F1)
+                    )
+                },
+                label = { Text("Estadísticas",
+                    color = Color(0xFFF8FAFC))
+                }
+            )
+
+            NavigationBarItem(
+                selected = currentRoute == "premiumOffer",
+                onClick = onNavigateToOfert,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Recomendaciones",
+                        tint = if (currentRoute == "routines") Color(0xFF34D399) else Color(0xFF6366F1)
+                    )
+                },
+                label = { Text("Rutinas",
+                    color = Color(0xFFF8FAFC))
+
+                }
+            )
+        }
+
     }
 }

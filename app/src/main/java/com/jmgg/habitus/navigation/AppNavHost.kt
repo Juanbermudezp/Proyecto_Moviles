@@ -15,6 +15,7 @@ import com.jmgg.habitus.ui.habit.HabitDetailsScreen
 import com.jmgg.habitus.ui.main.MainScreen
 import com.jmgg.habitus.ui.premium.RecommendedRoutinesScreen
 import com.jmgg.habitus.ui.premium.RoutineDetailScreen
+import com.jmgg.habitus.ui.startUp.FeaturesScreens.PremiumVersionOfferScreen
 import com.jmgg.habitus.ui.stats.StatsScreen
 
 @Composable
@@ -68,6 +69,10 @@ fun AppNavHost(
         }
         composable("main") {
             MainScreen(navController)
+        }
+        //oferta premium
+        composable("premiumOffer") {
+            PremiumVersionOfferScreen({})
         }
 
         //premium screens

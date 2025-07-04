@@ -153,7 +153,7 @@ fun CompletionChart(completed: Int, pending: Int) {
                     Modifier
                         .weight(completed.toFloat() / total)
                         .height(24.dp)
-                        .background(Color(0xFF4CAF50))
+                        .background(Color(0xFF34D399))
                 )
             }
             if (pending > 0) {

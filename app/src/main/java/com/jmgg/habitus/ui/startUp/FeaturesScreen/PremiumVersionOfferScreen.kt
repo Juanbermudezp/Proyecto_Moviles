@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,11 +32,13 @@ import com.jmgg.habitus.ui.startUp.FeaturesScreen.Components.FeatureRow
 fun PremiumVersionOfferScreen(
     onContinue: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
     Box(
         Modifier
             .fillMaxSize()
             .background(Color(0xFF0F172A))
             .padding(horizontal = 21.dp, vertical = 70.dp)
+            .verticalScroll(scrollState)
     ) {
         Column(
             Modifier
