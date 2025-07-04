@@ -25,11 +25,11 @@ fun CustomOutlinedTextField(
     trailingIcon: (@Composable () -> Unit)? = null
 ) {
     val customTextFieldColors = TextFieldDefaults.colors(
-        focusedTextColor = Color.White,
-        unfocusedTextColor = Color.White,
+        focusedTextColor = Color(0xFFF8FAFC),
+        unfocusedTextColor = Color(0xFFF8FAFC),
         cursorColor = Color(0xFF6366F1),
         focusedIndicatorColor = Color(0xFF6366F1),
-        unfocusedIndicatorColor = Color.White,
+        unfocusedIndicatorColor = Color(0xFFF8FAFC),
         focusedContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent
     )
@@ -40,6 +40,7 @@ fun CustomOutlinedTextField(
         label = {
             Text(
                 text = label,
+                color = Color(0xFFF8FAFC),
                 style = MaterialTheme.typography.bodyLarge
             )
         },
@@ -49,7 +50,9 @@ fun CustomOutlinedTextField(
         keyboardOptions = keyboardOptions,
         colors = customTextFieldColors,
         leadingIcon = leadingIcon?.let {
-            { Icon(imageVector = it, contentDescription = null) }
+            { Icon(imageVector = it,
+                contentDescription = null,
+                tint = Color(0xFFF8FAFC)) }
         },
         trailingIcon = trailingIcon
     )

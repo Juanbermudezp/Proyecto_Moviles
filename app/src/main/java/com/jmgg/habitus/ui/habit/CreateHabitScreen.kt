@@ -1,6 +1,7 @@
 package com.jmgg.habitus.ui.habit
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,6 +16,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.ImeAction
 import com.jmgg.habitus.HabitusApp
@@ -63,17 +65,22 @@ fun CreateHabitScreen(
     }
 
     Scaffold(
+        containerColor = Color(0xFF0F172A),
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color(0xFF0F172A))
                 .padding(24.dp)
                 .padding(padding)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top
         ) {
-            Text("Nuevo Hábito", style = MaterialTheme.typography.headlineSmall)
+            Text("Nuevo Hábito",
+                style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFFF8FAFC))
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
@@ -81,7 +88,13 @@ fun CreateHabitScreen(
                 onValueChange = { name = it },
                 label = { Text("Nombre del hábito") },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF6366F1),
+                    unfocusedBorderColor = Color(0xFFF8FAFC),
+                    textColor = Color(0xFFF8FAFC),
+                    cursorColor = Color(0xFF6366F1)
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -90,7 +103,13 @@ fun CreateHabitScreen(
                 value = category,
                 onValueChange = { category = it },
                 label = { Text("Categoría") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF6366F1),
+                    unfocusedBorderColor = Color(0xFFF8FAFC),
+                    textColor = Color(0xFFF8FAFC),
+                    cursorColor = Color(0xFF6366F1)
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -113,7 +132,13 @@ fun CreateHabitScreen(
                 value = description,
                 onValueChange = { description = it },
                 label = { Text("Descripción") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF6366F1),
+                    unfocusedBorderColor = Color(0xFFF8FAFC),
+                    textColor = Color(0xFFF8FAFC),
+                    cursorColor = Color(0xFF6366F1)
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -122,7 +147,13 @@ fun CreateHabitScreen(
                 value = notes,
                 onValueChange = { notes = it },
                 label = { Text("Notas adicionales") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF6366F1),
+                    unfocusedBorderColor = Color(0xFFF8FAFC),
+                    textColor = Color(0xFFF8FAFC),
+                    cursorColor = Color(0xFF6366F1)
+                )
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -158,7 +189,11 @@ fun CreateHabitScreen(
 
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0xFF6366F1),
+                    contentColor = Color(0xFF0F172A)
+                )
             ) {
                 Text("Guardar hábito")
             }

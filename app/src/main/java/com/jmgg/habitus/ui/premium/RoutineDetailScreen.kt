@@ -1,5 +1,6 @@
 package com.jmgg.habitus.ui.premium
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -9,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.models.Habit
 import kotlinx.coroutines.launch
@@ -30,18 +32,27 @@ fun RoutineDetailScreen(
     }
 
     if (currentUser == null || routineData == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Error al cargar rutina.")
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF0F172A)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "Error al cargar rutina.",
+                color = Color(0xFFF8FAFC)
+            )
         }
         return
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = Color(0xFF0F172A)
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color(0xFF0F172A))
                 .padding(24.dp)
                 .padding(padding)
                 .verticalScroll(scrollState),
@@ -49,20 +60,28 @@ fun RoutineDetailScreen(
         ) {
             Text(
                 text = routineData.title,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall.copy(color = Color(0xFFF8FAFC)),
                 fontWeight = FontWeight.Bold
             )
 
-            Text("Beneficios:", style = MaterialTheme.typography.titleMedium)
+            Text("Beneficios:",
+                style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
+            )
             routineData.benefits.forEach { benefit ->
-                Text("• $benefit")
+                Text("• $benefit",
+                    color = Color(0xFFF8FAFC)
+                )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("Hábitos sugeridos:", style = MaterialTheme.typography.titleMedium)
+            Text("Hábitos sugeridos:",
+                style = MaterialTheme.typography.titleMedium.copy(color = Color(0xFFF8FAFC))
+            )
             routineData.habits.forEach {
-                Text("- ${it.name}")
+                Text("- ${it.name}",
+                    color = Color(0xFFF8FAFC)
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -77,7 +96,11 @@ fun RoutineDetailScreen(
                         onRoutineAdded()
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF34D399),
+                    contentColor = Color(0xFF0F172A)
+                )
             ) {
                 Text("Empezar esta rutina")
             }

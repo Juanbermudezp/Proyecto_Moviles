@@ -108,7 +108,8 @@ fun RegisterScreen(
                     ) {
                         Icon(
                             imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = null, tint = Color.White
+                            contentDescription = null,
+                            tint = Color(0xFFF8FAFC)
                         )
                     }
                 },
@@ -135,7 +136,8 @@ fun RegisterScreen(
                     ) {
                         Icon(
                             imageVector = if (showConfirmPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = null, tint = Color.White
+                            contentDescription = null,
+                            tint = Color(0xFFF8FAFC)
                         )
                     }
                 },
@@ -151,7 +153,7 @@ fun RegisterScreen(
             if (showValidationError) {
                 Text(
                     "All fields are required and passwords must match",
-                    color = Color.Red,
+                    color = Color(0xFFEF4444),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -177,13 +179,19 @@ fun RegisterScreen(
                         showValidationError = true
                     }
                 },
-                colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF6366F1)),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0xFF6366F1),
+                    contentColor = Color(0xFF0F172A)
+                ),
                 shape = RoundedCornerShape(30),
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
                     .height(40.dp)
             ) {
-                Text("Sign up", color = Color.White, style = MaterialTheme.typography.titleMedium)
+                Text("Sign up",
+                    color = Color(0xFFF8FAFC),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
 
             Spacer(Modifier.height(16.dp))
@@ -198,7 +206,9 @@ fun RegisterScreen(
 
             if (error != null) {
                 Spacer(Modifier.height(8.dp))
-                Text(error!!, color = MaterialTheme.colorScheme.error)
+                Text(error!!,
+                    color = Color(0xFFEF4444)
+                )
             }
         }
     }
