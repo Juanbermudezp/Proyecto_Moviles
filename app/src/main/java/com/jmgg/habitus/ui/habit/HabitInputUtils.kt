@@ -12,10 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 
 import androidx.compose.foundation.layout.* // Para Column, Spacer, fillMaxWidth, padding, etc.
+import androidx.compose.material3.AlertDialog
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.TextButton
 import java.util.Calendar
 
 @Composable
@@ -25,24 +28,37 @@ fun FrequencyPicker(
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
+    val colors = TextFieldDefaults.outlinedTextFieldColors(
+        focusedBorderColor = Color(0xFF6366F1),
+        unfocusedBorderColor = Color(0xFFF8FAFC),
+        textColor = Color(0xFFF8FAFC),
+        cursorColor = Color(0xFF6366F1)
+    )
+
     Column {
         OutlinedTextField(
             value = currentFrequency,
             onValueChange = {},
-            label = { Text("Frecuencia (ej: 3 veces/semana)") },
+            label = { Text("Frecuencia (ej: 3 veces/semana)", color = Color(0xFFF8FAFC)) },
             modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
             readOnly = true,
             trailingIcon = {
                 IconButton(onClick = { showDialog = true }) {
-                    Icon(Icons.Default.DateRange, contentDescription = "Elegir frecuencia")
+                    Icon(
+                        Icons.Default.DateRange,
+                        contentDescription = "Elegir frecuencia",
+                        tint = Color(0xFF6366F1)
+                    )
                 }
-            }
+            },
+            colors = colors
         )
 
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Seleccionar frecuencia") },
+                containerColor = Color(0xFF475569),
+                title = { Text("Seleccionar frecuencia", color = Color(0xFFF8FAFC)) },
                 text = {
                     Column {
                         listOf("1 vez/semana", "2 veces/semana", "3 veces/semana", "4 veces/semana", "Diario")
@@ -51,7 +67,7 @@ fun FrequencyPicker(
                                     onFrequencySelected(option)
                                     showDialog = false
                                 }) {
-                                    Text(option)
+                                    Text(option, color = Color(0xFFF8FAFC))
                                 }
                             }
                     }
@@ -76,10 +92,17 @@ fun ReminderTimePicker(
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
 
+    val colors = TextFieldDefaults.outlinedTextFieldColors(
+        focusedBorderColor = Color(0xFF6366F1),
+        unfocusedBorderColor = Color(0xFFF8FAFC),
+        textColor = Color(0xFFF8FAFC),
+        cursorColor = Color(0xFF6366F1)
+    )
+
     OutlinedTextField(
         value = currentTime,
         onValueChange = {},
-        label = { Text("Hora de recordatorio") },
+        label = { Text("Hora de recordatorio", color = Color(0xFFF8FAFC)) },
         modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
         readOnly = true,
         trailingIcon = {
@@ -95,8 +118,13 @@ fun ReminderTimePicker(
                     true
                 ).show()
             }) {
-                Icon(Icons.Default.AccessTime, contentDescription = "Elegir hora")
+                Icon(
+                    Icons.Default.AccessTime,
+                    contentDescription = "Elegir hora",
+                    tint = Color(0xFF6366F1)
+                )
             }
-        }
+        },
+        colors = colors
     )
 }
