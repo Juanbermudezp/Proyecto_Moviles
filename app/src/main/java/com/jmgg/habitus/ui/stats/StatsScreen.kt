@@ -110,8 +110,9 @@ fun StatsScreen() {
 fun CardStat(title: String, value: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF475569)),
+        ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = title,
