@@ -1,5 +1,6 @@
 package com.jmgg.habitus.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -10,6 +11,7 @@ import com.jmgg.habitus.HabitusApp
 import com.jmgg.habitus.ui.main.components.MainBottomNavBar
 import com.jmgg.habitus.ui.main.components.MainTopBar
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.graphics.Color
 
 
 @Composable
@@ -21,6 +23,7 @@ fun AppScaffold() {
     val hideBars = currentRoute in listOf("login", "register")
 
     Scaffold(
+        containerColor = Color(0xFF0F172A),
         topBar = {
             if (!hideBars) {
                 MainTopBar(
@@ -53,9 +56,12 @@ fun AppScaffold() {
         },
         floatingActionButton = {
             if (currentRoute == "main") {
-                FloatingActionButton(onClick = {
-                    navController.navigate("createHabit")
-                }) {
+                FloatingActionButton(
+                    containerColor = Color(0xFF34D399),
+                    contentColor = Color(0xFF0F172A),
+                    onClick = {
+                    navController.navigate("createHabit") }
+                ) {
                     Text("+")
                 }
             }
@@ -63,7 +69,9 @@ fun AppScaffold() {
     ) { padding ->
         Box(modifier = Modifier
             .fillMaxSize()
-            .padding(padding)) {
+            .padding(padding)
+            .background(Color(0xFF0F172A))
+        ) {
             AppNavHost(
                 navController = navController,
                 modifier = Modifier.padding(padding)
